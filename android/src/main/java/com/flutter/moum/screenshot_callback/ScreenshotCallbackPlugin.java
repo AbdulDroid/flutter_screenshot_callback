@@ -6,7 +6,10 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
+import android.os.Environment;
 import android.os.FileObserver;
 
 import android.os.Handler;
@@ -23,11 +26,13 @@ public class ScreenshotCallbackPlugin implements MethodCallHandler {
     private Handler handler;
     private FileObserver fileObserver;
     private String TAG = "tag";
+    private static Context context;
 
 
     public static void registerWith(Registrar registrar) {
         channel = new MethodChannel(registrar.messenger(), "flutter.moum/screenshot_callback");
         channel.setMethodCallHandler(new ScreenshotCallbackPlugin());
+        context = registrar.activity().getApplicationContext();
     }
 
     @Override
@@ -38,9 +43,12 @@ public class ScreenshotCallbackPlugin implements MethodCallHandler {
             handler = new Handler(Looper.getMainLooper());
             if (Build.VERSION.SDK_INT >= 29) {
                 //Log.d(TAG, "android x");
-                List<File> files = new ArrayList<File>();
-                for (Path path : Path.values()) {
-                    files.add(new File(path.getPath()));
+                List<File> files = new ArrayList<>();
+                List<String> paths = new ArrayList<>();
+                paths.add(context.getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + "Screenshots" + File.separator);
+                paths.add(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "Screenshots" + File.separator);
+                for (String path : paths) {
+                    files.add(new File(path));
                 }
 
                 fileObserver = new FileObserver(files, FileObserver.CREATE) {
