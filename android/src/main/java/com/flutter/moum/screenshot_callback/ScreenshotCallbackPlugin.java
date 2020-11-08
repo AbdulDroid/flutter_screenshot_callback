@@ -14,6 +14,7 @@ import android.os.FileObserver;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 //import android.util.Log;
 
 import java.io.File;
@@ -41,13 +42,14 @@ public class ScreenshotCallbackPlugin implements MethodCallHandler {
 
         if (call.method.equals("initialize")) {
             handler = new Handler(Looper.getMainLooper());
-            if (Build.VERSION.SDK_INT >= 29) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 //Log.d(TAG, "android x");
                 List<File> files = new ArrayList<>();
                 List<String> paths = new ArrayList<>();
                 paths.add(context.getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + "Screenshots" + File.separator);
                 paths.add(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "Screenshots" + File.separator);
                 for (String path : paths) {
+                    Log.e("Paths", path);
                     files.add(new File(path));
                 }
 
