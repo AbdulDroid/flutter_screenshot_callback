@@ -42,14 +42,10 @@ public class ScreenshotCallbackPlugin implements MethodCallHandler {
 
         if (call.method.equals("initialize")) {
             handler = new Handler(Looper.getMainLooper());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT >= 29) {
                 //Log.d(TAG, "android x");
-                List<File> files = new ArrayList<>();
-                /*List<String> paths = new ArrayList<>();
-                paths.add(context.getExternalFilesDir(Environment.DIRECTORY_DCIM) + File.separator + "Screenshots" + File.separator);
-                paths.add(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + File.separator + "Screenshots" + File.separator);*/
+                List<File> files = new ArrayList<File>();
                 for (Path path : Path.values()) {
-                    Log.e("Paths", path.getPath());
                     files.add(new File(path.getPath()));
                 }
 
